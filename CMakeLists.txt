@@ -5,6 +5,7 @@ project(imgui-all-in-one)
 find_package(OPENGL REQUIRED)
 
 add_executable(imgui-all-in-one
+    application.cpp
     glad.c
     imgui/imgui.cpp
     imgui/imgui.h
