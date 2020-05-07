@@ -11,6 +11,7 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
 #include <application.h>
+#include <wchar.h>
 
 IApplication::~IApplication() = default;
 
@@ -22,28 +23,29 @@ int     g_display_h = 600;
 ImVec4  clear_color;
 
 void CreateGlContext();
+
 void SetCurrentContext();
+
 LRESULT WINAPI WndProc(
     HWND hWnd,
     UINT msg,
     WPARAM wParam,
     LPARAM lParam);
+    
 bool Init(
     HINSTANCE hInstance);
+    
 void Cleanup(
     HINSTANCE hInstance);
+    
 extern IApplication* CreateApplication();
 
- int WINAPI wWinMain(
-    _In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE hPrevInstance,
-    _In_ LPWSTR lpCmdLine,
-    _In_ int nCmdShow)
+ int wmain(
+     int argc,
+     wchar_t *argv[])
  {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-    UNREFERENCED_PARAMETER(nCmdShow);
-
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    
     IApplication *app = CreateApplication();
     
     if (!Init(hInstance))
@@ -86,9 +88,6 @@ extern IApplication* CreateApplication();
         
         app->Render2d();
     
-        //show Main Window
-        ImGui::ShowDemoWindow();
-        
         // Rendering
         ImGui::Render();
         
@@ -289,13 +288,13 @@ void CreateGlContext(){
     g_HDCDeviceContext = GetDC(
         g_hwnd);
 
-    int pixelFormal = ChoosePixelFormat(
+    int pixelFormat = ChoosePixelFormat(
         g_HDCDeviceContext,
         &pfd);
     
     SetPixelFormat(
         g_HDCDeviceContext,
-        pixelFormal,
+        pixelFormat,
         &pfd);
     
     g_GLRenderContext = wglCreateContext(
